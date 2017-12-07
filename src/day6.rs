@@ -19,7 +19,7 @@ fn cycle(banks: &Vec<u32>) -> Vec<u32> {
 }
 
 fn main() {
-    let start: Vec<u32> = INPUT
+    let mut current: Vec<u32> = INPUT
         .trim()
         .split('\t')
         .map(|s| s
@@ -28,7 +28,6 @@ fn main() {
         .collect();
     let mut seen = HashSet::new();
     let mut steps = 0;
-    let mut current = start;
     loop {
         let next = cycle(&current);
         steps += 1;
