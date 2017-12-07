@@ -27,5 +27,11 @@ path = "src/day5.rs"
 name = "day6"
 path = "src/day6.rs"
 
+[[bin]]
+name = "day7"
+path = "src/day7.rs"
+
 [dependencies]
 itertools = "0.7.4"
+nom = "3.2.1"
+petgraph = "0.4.10"
