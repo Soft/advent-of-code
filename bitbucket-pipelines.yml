@@ -1,0 +1,8 @@
+image: rust:latest
+
+pipelines:
+  default:
+    - step:
+        script:
+          - cargo build --release
+          - ./run-tests.sh
