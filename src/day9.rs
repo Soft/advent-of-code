@@ -3,27 +3,32 @@ extern crate nom;
 
 const INPUT: &[u8] = include_bytes!("input/day9.txt");
 
-named_args!(group(n: u32)<u32>,
+named_args!(group(n: u32)<(u32, u32)>,
             do_parse!(tag_s!("{") >>
-                      v: separated_list!(tag_s!(","), alt!(call!(group, n+1) | value!(0, garbage))) >>
+                      v: separated_list!(tag_s!(","),
+                                         alt!(call!(group, n+1) |
+                                              map!(garbage, |n| (0, n)))) >>
                       tag_s!("}") >>
                       ({
-                          let v: u32 = v.iter().sum();
-                          n + v
+                          let i: u32 = v.iter().map(|&(v,_)| v).sum();
+                          let g: u32 = v.iter().map(|&(_,v)| v).sum();
+                          (n + i, g)
                       })));
 
-named!(garbage<()>,
+named!(garbage<u32>,
        delimited!(tag_s!("<"),
-                  value!((), many0!(
-                      alt!(escape |
-                           value!((), none_of!(">"))))),
+                  map!(many0!(
+                      alt!(value!(0, escape) |
+                           value!(1, none_of!(">")))),
+                  |v| v.iter().sum()),
                  tag_s!(">")));
 
 named!(escape<()>,
        do_parse!(tag_s!("!") >> take_s!(1) >> (())));
 
 fn main() {
-    let sum = group(INPUT, 1).unwrap().1;
-    println!("{}", sum)
+    let (sum, garbage) = group(INPUT, 1).unwrap().1;
+    println!("{}", sum);
+    println!("{}", garbage);
 }
 
