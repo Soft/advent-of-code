@@ -8,17 +8,29 @@ fn main() {
         .chars()
         .filter_map(|c| c.to_digit(10))
         .collect::<Vec<_>>();
-    let digits = {
-        let first = digits[0].clone();
-        let mut digits = digits;
-        digits.push(first);
-        digits
-    };
-    let sum: u32 = digits
+    let len = digits.len();
+
+    let sum1: u32 = digits
         .iter()
-        .tuple_windows::<(_, _)>()
+        .cycle()
+        .take(len+1)
+        .tuple_windows()
         .filter_map(|(a, b)| if a==b { Some(a) } else { None })
         .sum();
-    println!("{}", sum);
+
+    let halfway_around = digits
+        .iter()
+        .cycle()
+        .skip(len/2);
+    let sum2: u32 = digits
+        .iter()
+        .cycle()
+        .zip(halfway_around)
+        .take(len)
+        .filter_map(|(a, b)| if a==b { Some(a) } else { None })
+        .sum();
+;
+    println!("{}", sum1);
+    println!("{}", sum2);
 }
 
