@@ -5,4 +5,4 @@ pipelines:
     - step:
         script:
           - cargo build --release
-          - ./run-tests.sh
+          - ./run-tests.py answers.json

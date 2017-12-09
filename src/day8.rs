@@ -55,7 +55,7 @@ fn check_constraint<'a>(regs: &mut HashMap<&'a str, i32>, instr: &'a Instr) -> b
     }
 }
 
-fn exec<'a>(regs: &mut HashMap<&'a str, i32>, instr: &'a Instr) {
+fn exec<'a>(regs: &mut HashMap<&'a str, i32>, max: &mut i32, instr: &'a Instr) {
     let check = check_constraint(regs, instr);
     let (r, op, v, _, _, _) = *instr;
     let rv = regs.entry(r).or_insert(0);
@@ -64,6 +64,9 @@ fn exec<'a>(regs: &mut HashMap<&'a str, i32>, instr: &'a Instr) {
             Op::Inc => *rv += v,
             Op::Dec => *rv -= v
         }
+        if *rv > *max {
+            *max = *rv;
+        }
     }
 }
 
@@ -71,12 +74,14 @@ fn main() {
     let instructions = parse_input(INPUT)
         .unwrap().1;
     let mut regs = HashMap::new();
+    let mut global_max = i32::min_value();
     for instr in instructions.iter() {
-        exec(&mut regs, instr);
+        exec(&mut regs, &mut global_max, instr);
     }
     let max = regs.iter()
         .max_by_key(|&(_, v)| *v)
         .unwrap();
-    println!("{}", max.1)
+    println!("{}", max.1);
+    println!("{}", global_max);
 }
 
