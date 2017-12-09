@@ -29,7 +29,7 @@ fn main() {
         .take(len)
         .filter_map(|(a, b)| if a==b { Some(a) } else { None })
         .sum();
-;
+
     println!("{}", sum1);
     println!("{}", sum2);
 }
