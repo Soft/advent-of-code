@@ -1,4 +1,10 @@
+#[macro_use]
+extern crate nom;
+
+use nom::digit;
+
 use std::collections::HashMap;
+use std::iter::FromIterator;
 
 const INPUT: &str = include_str!("input/day13.txt");
 
@@ -30,18 +36,14 @@ impl Scanner {
     }
 }
 
-fn parse_input(input: &str) -> HashMap<usize, Scanner> {
-    let mut scanners = HashMap::new();
-    for line in input.lines() {
-        let mut parts = line.split(':');
-        let layer = parts.next().unwrap().parse().unwrap();
-        let range: i32 = parts.next().unwrap().trim().parse().unwrap();
-        scanners.insert(layer, Scanner::new(range));
-    }
-    scanners
-}
+named!(parse_input<&str, HashMap<usize, Scanner>>,
+       map!(many0!(do_parse!(k: digit >> tag_s!(": ") >> v: digit >> tag_s!("\n") >>
+                             ((k.parse().unwrap(),
+                               Scanner::new(v.parse().unwrap()))))),
+           |ts| HashMap::from_iter(ts)));
 
-fn calculate_severity(layers: usize, mut scanners: &mut HashMap<usize, Scanner>) -> Option<i32> {
+fn calculate_severity(layers: usize, mut scanners: &mut HashMap<usize, Scanner>)
+                      -> Option<i32> {
     let mut severity = None;
     for i in 0..layers+1 {
         if let Some(current) = scanners.get(&i) {
@@ -56,13 +58,12 @@ fn calculate_severity(layers: usize, mut scanners: &mut HashMap<usize, Scanner>)
 }
 
 fn step_scanners(scanners: &mut HashMap<usize, Scanner>) {
-    for scanner in scanners.values_mut() {
-        scanner.step();
-    }
+    scanners.values_mut().for_each(|s| s.step());
 }
 
 fn main() {
-    let scanners = parse_input(INPUT);
+    let scanners = parse_input(INPUT)
+        .unwrap().1;
     let layers = scanners.keys()
         .max()
         .unwrap()
