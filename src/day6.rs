@@ -28,8 +28,9 @@ fn main() {
         .collect();
     let mut seen = HashSet::new();
     let mut steps = 0;
+    let mut next;
     loop {
-        let next = cycle(&current);
+        next = cycle(&current);
         steps += 1;
         if seen.contains(&next) {
             break;
@@ -38,6 +39,18 @@ fn main() {
             current = next;
         }
     }
-    println!("{:?}", steps);
+    println!("{}", steps);
+
+    let target = next.clone();
+    current = next;
+    for i in 1.. {
+        next = cycle(&current);
+        if next == target {
+            println!("{}", i);
+            break;
+        } else {
+            current = next;
+        }
+    }
 }
 
