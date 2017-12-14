@@ -1,0 +1,8 @@
+[package]
+name = "knot-hash"
+version = "0.1.0"
+authors = ["Samuel Laurén <samuel.lauren@iki.fi>"]
+
+[dependencies]
+itertools = "0.7.4"
+
