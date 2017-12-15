@@ -3,8 +3,6 @@ authors = ["Samuel Laurén <samuel.lauren@iki.fi>"]
 name = "advent-of-code"
 version = "0.1.0"
 
-[workspace]
-
 [[bin]]
 name = "day1"
 path = "src/day1.rs"
@@ -61,8 +59,17 @@ path = "src/day13.rs"
 name = "day14"
 path = "src/day14.rs"
 
+[[bin]]
+name = "day15"
+path = "src/day15.rs"
+
 [dependencies]
+bit-vec = "0.4.4"
 itertools = "0.7.4"
 nom = "3.2.1"
 petgraph = "0.4.10"
-knot-hash = { path = "knot-hash" }
+
+[dependencies.knot-hash]
+path = "knot-hash"
+
+[workspace]
