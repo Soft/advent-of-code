@@ -2,6 +2,8 @@
 extern crate nom;
 
 use nom::digit;
+use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 const INPUT: &str = include_str!("input/day16.txt");
 
@@ -56,11 +58,30 @@ named!(partner<&str, Move>,
                  b: map!(take_s!(1), |s| s.chars().next().unwrap()) >>
                  (Move::Partner(a, b))));
 
+fn run_program(program: &[Move], mut arrangement: &mut [char]) {
+    for m in program {
+        m.perform(&mut arrangement);
+    }
+}
 
 fn main() {
     let moves = parse_input(INPUT).unwrap().1;
     let mut arrangement: Vec<char> = (0..16).map(|i| ('a' as u8 + i) as char).collect();
     moves.iter().for_each(|m| m.perform(&mut arrangement));
+    println!("{}", arrangement.iter().collect::<String>());
+
+    let mut cache: HashMap<Vec<char>, Vec<char>> = HashMap::new();
+
+    for _ in 0..1_000_000_000-1 {
+        match cache.entry(arrangement.clone()) {
+            Entry::Occupied(v) => arrangement = v.get().to_owned(),
+            Entry::Vacant(v) => {
+                run_program(&moves, &mut arrangement);
+                v.insert(arrangement.clone());
+            }
+        }
+    }
+
     println!("{}", arrangement.iter().collect::<String>());
 }
 
