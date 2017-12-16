@@ -70,16 +70,26 @@ fn main() {
     moves.iter().for_each(|m| m.perform(&mut arrangement));
     println!("{}", arrangement.iter().collect::<String>());
 
-    let mut cache: HashMap<Vec<char>, Vec<char>> = HashMap::new();
+    let iterations = 1_000_000_000-1;
+    let mut cache: HashMap<Vec<char>, (Vec<char>, usize)> = HashMap::new();
+    let mut i = 0;
 
-    for _ in 0..1_000_000_000-1 {
+    while i < iterations {
         match cache.entry(arrangement.clone()) {
-            Entry::Occupied(v) => arrangement = v.get().to_owned(),
+            Entry::Occupied(v) => {
+                let &(ref result, ref n) = v.get();
+                let skip = 2*i - *n;
+                arrangement = result.to_owned();
+                if skip < iterations {
+                    i = skip;
+                }
+            },
             Entry::Vacant(v) => {
                 run_program(&moves, &mut arrangement);
-                v.insert(arrangement.clone());
+                v.insert((arrangement.clone(), i));
             }
         }
+        i += 1;
     }
 
     println!("{}", arrangement.iter().collect::<String>());
