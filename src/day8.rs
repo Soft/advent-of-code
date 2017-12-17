@@ -75,7 +75,7 @@ fn main() {
         .unwrap().1;
     let mut regs = HashMap::new();
     let mut global_max = i32::min_value();
-    for instr in instructions.iter() {
+    for instr in &instructions {
         exec(&mut regs, &mut global_max, instr);
     }
     let max = regs.iter()

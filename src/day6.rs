@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 const INPUT: &str = include_str!("input/day6.txt");
 
-fn cycle(banks: &Vec<u32>) -> Vec<u32> {
+fn cycle(banks: &[u32]) -> Vec<u32> {
     let len = banks.len();
     let (i, v) = banks
         .iter()
@@ -10,7 +10,7 @@ fn cycle(banks: &Vec<u32>) -> Vec<u32> {
         .rev()
         .max_by_key(|&(_, v)| v)
         .unwrap();
-    let mut result = banks.clone();
+    let mut result = banks.to_owned();
     result[i] = 0;
     for n in 0..*v as usize {
         result[(i as usize + 1 + n) % len] += 1;

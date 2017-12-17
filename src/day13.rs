@@ -40,7 +40,7 @@ named!(parse_input<&str, HashMap<usize, Scanner>>,
        map!(many0!(do_parse!(k: digit >> tag_s!(": ") >> v: digit >> tag_s!("\n") >>
                              ((k.parse().unwrap(),
                                Scanner::new(v.parse().unwrap()))))),
-           |ts| HashMap::from_iter(ts)));
+           HashMap::from_iter));
 
 fn calculate_severity(layers: usize, mut scanners: &mut HashMap<usize, Scanner>)
                       -> Option<i32> {

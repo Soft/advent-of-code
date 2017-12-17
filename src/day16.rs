@@ -20,12 +20,8 @@ impl Move {
                 let len = slice.len();
                 let copy = slice.to_owned();
                 let (start, end) = copy.split_at(len - n);
-                for i in 0..n {
-                    slice[i] = end[i];
-                }
-                for i in 0..len-n {
-                    slice[i+n] = start[i];
-                }
+                slice[..n].clone_from_slice(&end[..n]);
+                slice[n..(len-n + n)].clone_from_slice(&start[..len-n]);
             },
             Move::Exchange(a, b) => {
                 slice.swap(a, b);
@@ -66,7 +62,7 @@ fn run_program(program: &[Move], mut arrangement: &mut [char]) {
 
 fn main() {
     let moves = parse_input(INPUT).unwrap().1;
-    let mut arrangement: Vec<char> = (0..16).map(|i| ('a' as u8 + i) as char).collect();
+    let mut arrangement: Vec<char> = (0..16).map(|i| (b'a' as u8 + i) as char).collect();
     moves.iter().for_each(|m| m.perform(&mut arrangement));
     println!("{}", arrangement.iter().collect::<String>());
 

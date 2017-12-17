@@ -37,7 +37,7 @@ fn main() {
         .unwrap().1;
 
     let mut graph: DiGraphMap<&str, ()> = DiGraphMap::new();
-    for &(ref e, _, ref cs) in entries.iter() {
+    for &(e, _, ref cs) in &entries {
         graph.add_node(e);
         cs.iter().for_each(|c| {
             graph.add_edge(e, c, ());

@@ -33,7 +33,7 @@ fn mark_region(area: &[BitVec], visited: &mut HashSet<(usize, usize)>, start: (u
 fn main() {
     let hashes: Vec<[u8; 16]> = (0..128)
         .map(|i| format!("{}-{}", INPUT, i).as_bytes().to_owned())
-        .map(|b| knot_hash::hash(b))
+        .map(knot_hash::hash)
         .collect();
     let reserved: u32 = hashes
         .iter()
