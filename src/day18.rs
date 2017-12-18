@@ -7,15 +7,6 @@ use std::collections::{HashMap, VecDeque};
 
 const INPUT: &str = include_str!("input/day18.txt");
 
-// const INPUT: &str = "snd 1
-// snd 2
-// snd p
-// rcv a
-// rcv b
-// rcv c
-// rcv d
-// ";
-
 type Reg = char;
 
 #[derive(Debug)]
