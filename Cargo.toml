@@ -2,6 +2,11 @@
 authors = ["Samuel Laurén <samuel.lauren@iki.fi>"]
 name = "advent-of-code"
 version = "0.1.0"
+publish = false
+repository = "https://bitbucket.org/Soft/advent-of-code"
+documentation = "Advent of Code 2017 solutions"
+readme = "README.md"
+license = "MIT"
 
 [[bin]]
 name = "day1"
