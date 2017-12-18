@@ -3,9 +3,18 @@ extern crate nom;
 
 use nom::digit;
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 const INPUT: &str = include_str!("input/day18.txt");
+
+// const INPUT: &str = "snd 1
+// snd 2
+// snd p
+// rcv a
+// rcv b
+// rcv c
+// rcv d
+// ";
 
 type Reg = char;
 
@@ -132,6 +141,7 @@ impl<'a, S, R> Interpreter<'a, S, R>
                 if let Some(v) = v {
                     let r = self.registers.entry(*r).or_insert(0);
                     *r = v;
+                } else {
                     return true;
                 }
             },
@@ -172,6 +182,53 @@ fn main() {
     }
 
     println!("{}", last.unwrap());
+
+    let sent = RefCell::new(0);
+    let queue_a = RefCell::new(VecDeque::new());
+    let queue_b = RefCell::new(VecDeque::new());
+    let waiting_a = RefCell::new(false);
+    let waiting_b = RefCell::new(false);
+    let mut running_a = true;
+    let mut running_b = true;
+
+    fn receive(source: &RefCell<VecDeque<i64>>, wait: &RefCell<bool>) -> Option<i64> {
+        if let Some(v) = source.borrow_mut().pop_front() {
+            *wait.borrow_mut() = false;
+            Some(v)
+        } else {
+            *wait.borrow_mut() = true;
+            None
+        }
+    }
+
+    let mut interp_a = Interpreter
+        ::new(&program,
+              |i| queue_a.borrow_mut().push_back(i),
+              || receive(&queue_b, &waiting_a));
+    interp_a.registers.insert('p', 0);
+
+    let mut interp_b = Interpreter
+        ::new(&program,
+              |i| {
+                  *sent.borrow_mut() += 1;
+                  queue_b.borrow_mut().push_back(i);
+              },
+              || receive(&queue_a, &waiting_b));
+    interp_b.registers.insert('p', 1);
+
+    loop {
+        if running_a {
+            running_a = interp_a.step();
+        }
+        if running_b {
+            running_b = interp_b.step();
+        }
+        if (*waiting_a.borrow() && *waiting_b.borrow()) || !running_a || !running_b {
+            break;
+        }
+    }
+
+    println!("{}", *sent.borrow());
 }
 
 
