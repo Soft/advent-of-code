@@ -62,7 +62,7 @@ fn run_program(program: &[Move], mut arrangement: &mut [char]) {
 
 fn main() {
     let moves = parse_input(INPUT).unwrap().1;
-    let mut arrangement: Vec<char> = (0..16).map(|i| (b'a' as u8 + i) as char).collect();
+    let mut arrangement: Vec<char> = (0..16).map(|i| (b'a' + i) as char).collect();
     moves.iter().for_each(|m| m.perform(&mut arrangement));
     println!("{}", arrangement.iter().collect::<String>());
 
