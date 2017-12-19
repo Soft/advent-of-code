@@ -43,6 +43,7 @@ fn main() {
     let (mut x, mut y) = (start_x, 0);
     let mut dir = Down;
     let mut letters: Vec<char> = vec![];
+    let mut steps = 0;
 
     loop {
         if grid[y][x].is_alphabetic() {
@@ -64,11 +65,13 @@ fn main() {
             }
         };
 
+        steps += 1;
         x=x2;
         y=y2;
     }
 
     println!("{}", letters.iter().collect::<String>());
+    println!("{}", steps);
 
 }
 
